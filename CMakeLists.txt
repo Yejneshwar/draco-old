@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
 project(draco C CXX)
 
 if(NOT CMAKE_BUILD_TYPE)
@@ -578,6 +578,10 @@ if(DRACO_TRANSCODER_SUPPORTED)
     "${draco_src_root}/texture/texture_transform.h"
     "${draco_src_root}/texture/texture_utils.cc"
     "${draco_src_root}/texture/texture_utils.h")
+
+  list(APPEND draco_transcoder_sources
+        "${draco_src_root}/tools/draco_transcoder_lib.cc"
+        "${draco_src_root}/tools/draco_transcoder_lib.h")
 endif()
 
 #
@@ -908,6 +912,21 @@ else()
       ${draco_defines}
       INCLUDES
       ${draco_include_paths})
+
+    draco_add_library(
+      NAME
+      draco_transcoder_library
+      TYPE
+      OBJECT
+      SOURCES
+      "${draco_src_root}/tools/draco_transcoder.cc"
+      "${draco_src_root}/tools/draco_transcoder_lib.cc"
+      "${draco_src_root}/tools/draco_transcoder_lib.h"
+      DEFINES
+      ${draco_defines}
+      INCLUDES
+      ${draco_include_paths}
+      )
   endif()
 
   list(APPEND draco_object_library_deps
@@ -941,7 +960,7 @@ else()
 
   if(DRACO_TRANSCODER_SUPPORTED)
     list(APPEND draco_object_library_deps
-         draco_material draco_scene draco_texture)
+         draco_material draco_scene draco_texture draco_transcoder_library)
   endif()
 
   # Library targets that consume the object collections.

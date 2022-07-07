@@ -89,8 +89,10 @@ int main(int argc, char **argv) {
       return 0;
     } else if (!strcmp("-i", argv[i]) && i < argc_check) {
       file_options.input_filename = argv[++i];
+      std::cout << "Input : " << file_options.input_filename << std::endl;
     } else if (!strcmp("-o", argv[i]) && i < argc_check) {
       file_options.output_filename = argv[++i];
+      std::cout << " Output : " << file_options.output_filename << std::endl;
     } else if (!strcmp("-qp", argv[i]) && i < argc_check) {
       transcode_options.geometry.quantization_bits_position =
           StringToInt(argv[++i]);

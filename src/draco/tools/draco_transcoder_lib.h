@@ -24,6 +24,7 @@
 #include "draco/core/options.h"
 #include "draco/io/gltf_encoder.h"
 #include "draco/io/image_compression_options.h"
+#include "draco/core/decoder_buffer.h"
 
 namespace draco {
 
@@ -77,9 +78,23 @@ class DracoTranscoder {
   // transcoder once and call Transcode for multiple files.
   Status Transcode(const FileOptions &file_options);
 
+
+  //output final stream to write to file
+  Status TranscodeBuffer(const DecoderBuffer &buffer,
+                         std::ostream *out_buffer);
+
+
+ /* Status TranscodeBuffer(const DecoderBuffer &buffer,
+                          EncoderBuffer *out_buffer);*/
+
+
  private:
   // Read scene from file.
   Status ReadScene(const FileOptions &file_options);
+
+  Status ReadScene(const DecoderBuffer &buffer);
+
+  Status WriteCustomScene(std::ostream *out_buffer);
 
   // Write scene to file.
   Status WriteScene(const FileOptions &file_options);

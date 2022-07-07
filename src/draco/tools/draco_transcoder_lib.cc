@@ -47,6 +47,17 @@ Status DracoTranscoder::Transcode(const FileOptions &file_options) {
   return OkStatus();
 }
 
+Status DracoTranscoder::TranscodeBuffer(const DecoderBuffer &buffer,
+                                        std::ostream *out_buffer) {
+  DRACO_RETURN_IF_ERROR(ReadScene(buffer));
+  DRACO_RETURN_IF_ERROR(CompressScene());
+  std::cout << " NEED TO WRITE TO FILE " << std::endl;
+  DRACO_RETURN_IF_ERROR(WriteCustomScene(out_buffer));
+
+
+  return OkStatus();
+}
+
 Status DracoTranscoder::ReadScene(const FileOptions &file_options) {
   if (file_options.input_filename.empty()) {
     return Status(Status::DRACO_ERROR, "Input filename is empty.");
@@ -58,7 +69,25 @@ Status DracoTranscoder::ReadScene(const FileOptions &file_options) {
   return OkStatus();
 }
 
+Status DracoTranscoder::ReadScene(const DecoderBuffer &buffer) {
+
+  DRACO_ASSIGN_OR_RETURN(scene_,
+                         ReadSceneFromBuffer(buffer));
+  return OkStatus();
+}
+
+Status DracoTranscoder::WriteCustomScene(std::ostream *out_buffer) {
+    DRACO_RETURN_IF_ERROR(
+        gltf_encoder_.EncodeFile<Scene>(*scene_, out_buffer));
+
+   return OkStatus();
+}
+
 Status DracoTranscoder::WriteScene(const FileOptions &file_options) {
+  std::cout << " Output Bin : " << file_options.output_bin_filename
+            << std::endl;
+  std::cout << " Output Resource : " << file_options.output_resource_directory
+            << std::endl;
   if (!file_options.output_bin_filename.empty() &&
       !file_options.output_resource_directory.empty()) {
     DRACO_RETURN_IF_ERROR(gltf_encoder_.EncodeFile<Scene>(

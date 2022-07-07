@@ -393,7 +393,7 @@ StatusOr<std::unique_ptr<Scene>> GltfDecoder::DecodeFromFileToScene(
 }
 
 StatusOr<std::unique_ptr<Scene>> GltfDecoder::DecodeFromBufferToScene(
-    DecoderBuffer *buffer) {
+   const DecoderBuffer *buffer) {
   DRACO_RETURN_IF_ERROR(LoadBuffer(*buffer));
   scene_ = std::unique_ptr<Scene>(new Scene());
   DRACO_RETURN_IF_ERROR(DecodeGltfToScene());

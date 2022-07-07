@@ -11,7 +11,7 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-//
+#pragma once
 #ifndef DRACO_IO_GLTF_ENCODER_H_
 #define DRACO_IO_GLTF_ENCODER_H_
 
@@ -48,6 +48,21 @@ class GltfEncoder {
   template <typename T>
   bool EncodeToFile(const T &geometry, const std::string &file_name,
                     const std::string &base_dir);
+  
+  //this is the new object added
+  template <typename T>
+  Status NewFunc(const T &geometry, const std::ostream *out_buffer);
+
+  //WTF!! why does this show as unresolved if defined in the .cc file
+  template <typename T>
+  inline Status EncodeFile(const T &geometry, const std::ostream *out_buffer) {
+    std::cout << "encode buffer" << std::endl;
+
+    this->GltfEncoder::NewFunc(&geometry, out_buffer);
+    return OkStatus();
+  }
+
+
 
   // Saves |geometry| into glTF 2.0 format. |filename| is the name of the
   // glTF file. The glTF bin file (if needed) will be named stem(|filename|) +

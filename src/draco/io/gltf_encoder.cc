@@ -18,6 +18,7 @@
 #include <sys/types.h>
 
 #include <algorithm>
+#include "draco/io/gltf_encoder.h"
 #include <cstdint>
 #include <memory>
 #include <set>
@@ -3014,11 +3015,35 @@ const char GltfEncoder::kDracoMetadataGltfAttributeName[] =
 GltfEncoder::GltfEncoder() : out_buffer_(nullptr), output_type_(COMPACT) {}
 
 template <typename T>
+Status GltfEncoder::NewFunc(const T &geometry, const std::ostream *out_buffer) {
+  GltfAsset gltf_asset;
+  gltf_asset.set_output_type(output_type_);
+  
+  gltf_asset.buffer_name("");
+  gltf_asset.set_add_images_to_buffer(true);
+
+  // Encode the geometry into a buffer.
+  EncoderBuffer buffer;
+  //DRACO_RETURN_IF_ERROR(EncodeToBuffer(geometry, &gltf_asset, &buffer));
+
+    std::cout << "glb extension" << std::endl;
+    //return WriteGlbFile(gltf_asset, buffer, filename);
+  
+  //return OkStatus();
+}
+
+template <typename T>
 bool GltfEncoder::EncodeToFile(const T &geometry, const std::string &file_name,
                                const std::string &base_dir) {
   const std::string buffer_name = base_dir + "/buffer0.bin";
   return EncodeFile(geometry, file_name, buffer_name, base_dir).ok();
 }
+
+//template <typename T>
+//bool GltfEncoder::EncodeFile(const T &geometry, const std::ostream *out_buffer) {
+//  std::cout << "encode buffer" << std::endl;
+//  return 0;
+//}
 
 template <typename T>
 Status GltfEncoder::EncodeFile(const T &geometry, const std::string &filename) {

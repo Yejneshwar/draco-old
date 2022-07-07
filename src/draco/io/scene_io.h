@@ -24,6 +24,7 @@
 #include "draco/core/options.h"
 #include "draco/core/status_or.h"
 #include "draco/scene/scene.h"
+#include "draco/io/gltf_decoder.h"
 
 namespace draco {
 
@@ -34,6 +35,9 @@ StatusOr<std::unique_ptr<Scene>> ReadSceneFromFile(
     const std::string &file_name);
 StatusOr<std::unique_ptr<Scene>> ReadSceneFromFile(
     const std::string &file_name, std::vector<std::string> *scene_files);
+
+StatusOr<std::unique_ptr<Scene>> ReadSceneFromBuffer(
+    const DecoderBuffer &buffer);
 
 // Writes a scene into a file.
 Status WriteSceneToFile(const std::string &file_name, const Scene &scene);

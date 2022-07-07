@@ -58,7 +58,7 @@ class GltfDecoder {
   StatusOr<std::unique_ptr<Scene>> DecodeFromFileToScene(
       const std::string &file_name, std::vector<std::string> *scene_files);
   StatusOr<std::unique_ptr<Scene>> DecodeFromBufferToScene(
-      DecoderBuffer *buffer);
+      const DecoderBuffer *buffer);
 
   // Scene graph can be loaded either as a tree or a general directed acyclic
   // graph (DAG) that allows multiple parent nodes. By default. we decode the

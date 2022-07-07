@@ -66,6 +66,12 @@ StatusOr<std::unique_ptr<Scene>> ReadSceneFromFile(
   }
 }
 
+StatusOr<std::unique_ptr<Scene>> ReadSceneFromBuffer(
+    const DecoderBuffer &buffer) {
+      GltfDecoder decoder;
+      return decoder.DecodeFromBufferToScene(&buffer);
+}
+
 Status WriteSceneToFile(const std::string &file_name, const Scene &scene) {
   Options options;
   return WriteSceneToFile(file_name, scene, options);
