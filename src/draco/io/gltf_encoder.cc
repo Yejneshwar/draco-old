@@ -3015,21 +3015,22 @@ const char GltfEncoder::kDracoMetadataGltfAttributeName[] =
 GltfEncoder::GltfEncoder() : out_buffer_(nullptr), output_type_(COMPACT) {}
 
 template <typename T>
-Status GltfEncoder::NewFunc(const T &geometry, const std::ostream *out_buffer) {
+Status GltfEncoder::EncodeToStream(const T &geometry,
+                                       std::ostream *out_buffer) {
   GltfAsset gltf_asset;
   gltf_asset.set_output_type(output_type_);
-  
+
   gltf_asset.buffer_name("");
   gltf_asset.set_add_images_to_buffer(true);
 
   // Encode the geometry into a buffer.
   EncoderBuffer buffer;
-  //DRACO_RETURN_IF_ERROR(EncodeToBuffer(geometry, &gltf_asset, &buffer));
+  DRACO_RETURN_IF_ERROR(EncodeToBuffer(geometry, &gltf_asset, &buffer));
 
-    std::cout << "glb extension" << std::endl;
-    //return WriteGlbFile(gltf_asset, buffer, filename);
-  
-  //return OkStatus();
+  std::cout << "glb extension" << std::endl;
+  return WriteGlbFile(gltf_asset, buffer, out_buffer);
+
+  return OkStatus();
 }
 
 template <typename T>
@@ -3164,6 +3165,12 @@ template Status GltfEncoder::EncodeToBuffer<Mesh>(const Mesh &geometry,
 template Status GltfEncoder::EncodeToBuffer<Scene>(const Scene &geometry,
                                                    EncoderBuffer *out_buffer);
 
+// Explicit instantiation
+template Status GltfEncoder::EncodeToStream<Scene>(const Scene &geometry,
+                                            std::ostream *out_buffer);
+template Status GltfEncoder::EncodeToStream<Mesh>(const Mesh &geometry,
+                                            std::ostream *out_buffer);
+
 Status GltfEncoder::EncodeToBuffer(const Mesh &mesh, GltfAsset *gltf_asset,
                                    EncoderBuffer *out_buffer) {
   out_buffer_ = out_buffer;
@@ -3218,6 +3225,24 @@ Status GltfEncoder::WriteGltfFiles(const GltfAsset &gltf_asset,
   }
   return OkStatus();
 }
+
+Status GltfEncoder::WriteGlbFile(const GltfAsset &gltf_asset,
+                                 const EncoderBuffer &json_data,
+                                 std::ostream *out_buffer) {
+  // Define a function for writing GLB file chunks to |file|.
+  const auto write_chunk_to_file =
+      [&out_buffer](const EncoderBuffer &chunk) -> Status {
+    if (!out_buffer->write(chunk.data(), chunk.size())) {
+      return Status(Status::DRACO_ERROR, "Error writing to glb file.");
+    }
+    return OkStatus();
+  };
+
+  // Create GLB file chunks and write them to file.
+  return ProcessGlbFileChunks(gltf_asset, json_data, write_chunk_to_file);
+}
+
+
 
 Status GltfEncoder::WriteGlbFile(const GltfAsset &gltf_asset,
                                  const EncoderBuffer &json_data,
