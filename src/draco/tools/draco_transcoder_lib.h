@@ -81,7 +81,7 @@ class DracoTranscoder {
 
   //output final stream to write to file
   Status TranscodeBuffer(const DecoderBuffer &buffer,
-                         std::ostream *out_buffer);
+                         std::stringstream *out_buffer);
 
 
  /* Status TranscodeBuffer(const DecoderBuffer &buffer,
@@ -94,7 +94,7 @@ class DracoTranscoder {
 
   Status ReadScene(const DecoderBuffer &buffer);
 
-  Status WriteToStream(std::ostream *out_buffer);
+  Status WriteToStream(std::stringstream *out_buffer);
 
   // Write scene to file.
   Status WriteScene(const FileOptions &file_options);

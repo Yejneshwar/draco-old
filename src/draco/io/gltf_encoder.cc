@@ -3015,8 +3015,7 @@ const char GltfEncoder::kDracoMetadataGltfAttributeName[] =
 GltfEncoder::GltfEncoder() : out_buffer_(nullptr), output_type_(COMPACT) {}
 
 template <typename T>
-Status GltfEncoder::EncodeToStream(const T &geometry,
-                                       std::ostream *out_buffer) {
+Status GltfEncoder::EncodeToStream(const T &geometry, std::stringstream * out_buffer) {
   GltfAsset gltf_asset;
   gltf_asset.set_output_type(output_type_);
 
@@ -3167,9 +3166,9 @@ template Status GltfEncoder::EncodeToBuffer<Scene>(const Scene &geometry,
 
 // Explicit instantiation
 template Status GltfEncoder::EncodeToStream<Scene>(const Scene &geometry,
-                                            std::ostream *out_buffer);
+                                            std::stringstream *out_buffer);
 template Status GltfEncoder::EncodeToStream<Mesh>(const Mesh &geometry,
-                                            std::ostream *out_buffer);
+                                            std::stringstream *out_buffer);
 
 Status GltfEncoder::EncodeToBuffer(const Mesh &mesh, GltfAsset *gltf_asset,
                                    EncoderBuffer *out_buffer) {
@@ -3228,7 +3227,7 @@ Status GltfEncoder::WriteGltfFiles(const GltfAsset &gltf_asset,
 
 Status GltfEncoder::WriteGlbFile(const GltfAsset &gltf_asset,
                                  const EncoderBuffer &json_data,
-                                 std::ostream *out_buffer) {
+                                 std::stringstream *out_buffer) {
   // Define a function for writing GLB file chunks to |file|.
   const auto write_chunk_to_file =
       [&out_buffer](const EncoderBuffer &chunk) -> Status {
