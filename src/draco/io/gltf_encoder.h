@@ -49,7 +49,7 @@ class GltfEncoder {
                     const std::string &base_dir);
   
   template <typename T>
-  Status EncodeToStream(const T &geometry, std::ostream *out_buffer);
+  Status EncodeToStream(const T &geometry, std::stringstream * out_buffer);
 
   // Saves |geometry| into glTF 2.0 format. |filename| is the name of the
   // glTF file. The glTF bin file (if needed) will be named stem(|filename|) +
@@ -111,7 +111,7 @@ class GltfEncoder {
                         const std::string &resource_dir);
 
   Status WriteGlbFile(const GltfAsset &gltf_asset,
-                      const EncoderBuffer &json_data, std::ostream *out_buffer);
+                      const EncoderBuffer &json_data, std::stringstream *out_buffer);
 
   // Writes the ".glb" file. |gltf_asset| holds the glTF data. |json_data| is
   // the encoded glTF json data. |filename| is the name of the ".glb" file.

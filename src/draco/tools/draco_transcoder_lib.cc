@@ -48,7 +48,7 @@ Status DracoTranscoder::Transcode(const FileOptions &file_options) {
 }
 
 Status DracoTranscoder::TranscodeBuffer(const DecoderBuffer &buffer,
-                                        std::ostream *out_buffer) {
+                                        std::stringstream *out_buffer) {
   DRACO_RETURN_IF_ERROR(ReadScene(buffer));
   DRACO_RETURN_IF_ERROR(CompressScene());
   std::cout << " NEED TO WRITE TO FILE " << std::endl;
@@ -76,7 +76,7 @@ Status DracoTranscoder::ReadScene(const DecoderBuffer &buffer) {
   return OkStatus();
 }
 
-Status DracoTranscoder::WriteToStream(std::ostream *out_buffer) {
+Status DracoTranscoder::WriteToStream(std::stringstream *out_buffer) {
     DRACO_RETURN_IF_ERROR(
         gltf_encoder_.EncodeToStream<Scene>(*scene_, out_buffer));
 
